@@ -1,4 +1,7 @@
 import * as micro from "../../lib";
+import * as pulumi from "@pulumi/pulumi";
+
+const config = new pulumi.Config();
 
 // Create a new cluster to run our microservices.
 const cluster = new micro.AwsEcsCluster("my-cluster");
@@ -7,7 +10,7 @@ const cluster = new micro.AwsEcsCluster("my-cluster");
 const application = new micro.Service(cluster, {
     name: "my-app",
     image: "./app",
-    replicas: 3,
+    replicas: config.getNumber("replicas"),
     sidecars: [
         {
             name: "nginx-rp",
